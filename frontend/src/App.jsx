@@ -241,7 +241,7 @@ function App() {
                       <div className="reason">Source: {result.source || 'N/A'}</div>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '4px 8px' }}>
+                      <div className={getBadgeClass(result.decision)} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: '4px 8px' }}>
                         {getDecisionIcon(result.decision)}
                         <select 
                           style={{ background: 'transparent', color: 'var(--text)', border: 'none', outline: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}
