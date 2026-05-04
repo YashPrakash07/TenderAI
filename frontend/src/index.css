@@ -354,3 +354,66 @@ tbody tr:nth-child(5) { animation-delay: 0.5s; }
     transform: translateX(0);
   }
 }
+
+/* Comprehensive Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 1.5rem 1rem;
+  }
+
+  .app-container {
+    gap: 1.5rem;
+  }
+
+  .header h1 {
+    font-size: 2.5rem;
+  }
+
+  .header p {
+    font-size: 1rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .file-input-wrapper {
+    padding: 2rem 1rem;
+  }
+
+  .evaluate-btn {
+    font-size: 1.25rem;
+    padding: 1rem;
+  }
+
+  .results-table th,
+  .results-table td {
+    padding: 1rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .card {
+    padding: 1.25rem;
+  }
+  
+  .results-table th,
+  .results-table td {
+    padding: 0.75rem 0.5rem;
+  }
+}
