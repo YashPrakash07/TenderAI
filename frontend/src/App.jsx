@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader, Play, Download, Bot } from 'lucide-react';
+import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader, Play, Download, Bot, Github, Twitter, Linkedin } from 'lucide-react';
 import './index.css';
 
 const API_URL = 'http://localhost:3001';
@@ -133,129 +133,158 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Background Orbs */}
-      <div className="orb orb-1"></div>
-      <div className="orb orb-2"></div>
-      <div className="orb orb-3"></div>
-
-      <header className="header">
-        <h1><Bot size={54} className="title-icon" /> TenderAI</h1>
-        <p>Automated Tender Eligibility Evaluation</p>
-      </header>
-
-      {errorMsg && (
-        <div className="card" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'var(--danger)' }}>
-          <p style={{ color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <AlertCircle size={20} /> {errorMsg}
-          </p>
+    <>
+      <nav className="navbar">
+        <div className="nav-brand">
+          <Bot size={28} className="nav-icon" />
+          <span>TenderAI</span>
         </div>
-      )}
+        <div className="nav-links">
+          <a href="#">Dashboard</a>
+          <a href="#">Evaluations</a>
+          <a href="#" className="nav-btn">Get Started</a>
+        </div>
+      </nav>
 
-      <div className="upload-section">
-        {/* Tender Upload */}
-        <div className="card">
-          <h2><FileText className="text-primary" /> Tender Document</h2>
-          <div className={`file-input-wrapper ${tenderStatus === 'loading' ? 'scanning-wrapper' : ''}`}>
-            <input type="file" accept=".pdf" onChange={handleTenderUpload} />
-            <Upload size={32} className="icon" />
-            <p>{tenderFile ? tenderFile.name : 'Click or drag PDF to upload'}</p>
-          </div>
-          {tenderStatus === 'loading' && (
-            <div className="loading" style={{ marginTop: '1rem' }}>
-              <Loader className="spinner" size={18} /> Processing...
-            </div>
-          )}
-          {tenderStatus === 'success' && (
-            <p style={{ color: 'var(--success)', marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <CheckCircle size={18} /> Criteria Extracted
+      <div className="app-container">
+        {/* Background Orbs */}
+        <div className="orb orb-1"></div>
+        <div className="orb orb-2"></div>
+        <div className="orb orb-3"></div>
+
+        <header className="header">
+          <h1>Tender Eligibility Evaluator</h1>
+          <p>Automate your compliance checks with advanced AI</p>
+        </header>
+
+        {errorMsg && (
+          <div className="card" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', borderColor: 'var(--danger)' }}>
+            <p style={{ color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <AlertCircle size={20} /> {errorMsg}
             </p>
-          )}
+          </div>
+        )}
+
+        <div className="upload-section">
+          {/* Tender Upload */}
+          <div className="card">
+            <h2><FileText className="text-primary" /> Tender Document</h2>
+            <div className={`file-input-wrapper ${tenderStatus === 'loading' ? 'scanning-wrapper' : ''}`}>
+              <input type="file" accept=".pdf" onChange={handleTenderUpload} />
+              <Upload size={32} className="icon" />
+              <p>{tenderFile ? tenderFile.name : 'Click or drag PDF to upload'}</p>
+            </div>
+            {tenderStatus === 'loading' && (
+              <div className="loading" style={{ marginTop: '1rem' }}>
+                <Loader className="spinner" size={18} /> Processing...
+              </div>
+            )}
+            {tenderStatus === 'success' && (
+              <p style={{ color: 'var(--success)', marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <CheckCircle size={18} /> Criteria Extracted
+              </p>
+            )}
+          </div>
+
+          {/* Bidder Upload */}
+          <div className="card">
+            <h2><FileText className="text-primary" /> Bidder Documents</h2>
+            <div className={`file-input-wrapper ${bidderStatus === 'loading' ? 'scanning-wrapper' : ''}`}>
+              <input type="file" accept=".pdf,image/*" multiple onChange={handleBidderUpload} />
+              <Upload size={32} className="icon" />
+              <p>{bidderFiles.length > 0 ? `${bidderFiles.length} files selected` : 'Click or drag documents to upload'}</p>
+            </div>
+            {bidderStatus === 'loading' && (
+              <div className="loading" style={{ marginTop: '1rem' }}>
+                <Loader className="spinner" size={18} /> Processing...
+              </div>
+            )}
+            {bidderStatus === 'success' && (
+              <p style={{ color: 'var(--success)', marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <CheckCircle size={18} /> Bidder Data Extracted
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Bidder Upload */}
-        <div className="card">
-          <h2><FileText className="text-primary" /> Bidder Documents</h2>
-          <div className={`file-input-wrapper ${bidderStatus === 'loading' ? 'scanning-wrapper' : ''}`}>
-            <input type="file" accept=".pdf,image/*" multiple onChange={handleBidderUpload} />
-            <Upload size={32} className="icon" />
-            <p>{bidderFiles.length > 0 ? `${bidderFiles.length} files selected` : 'Click or drag documents to upload'}</p>
-          </div>
-          {bidderStatus === 'loading' && (
-            <div className="loading" style={{ marginTop: '1rem' }}>
-              <Loader className="spinner" size={18} /> Processing...
+        <button 
+          className="btn evaluate-btn" 
+          onClick={handleEvaluate}
+          disabled={evaluating || tenderStatus !== 'success' || bidderStatus !== 'success'}
+        >
+          {evaluating ? (
+            <><Loader className="spinner" /> Evaluating...</>
+          ) : (
+            <><Play /> Run Evaluation</>
+          )}
+        </button>
+
+        {/* Results Section */}
+        {evaluationResults && evaluationResults.length > 0 && (
+          <div className="card">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ marginBottom: 0 }}>Evaluation Results</h2>
+              <button 
+                className="btn" 
+                style={{ width: 'auto', marginTop: 0, background: 'rgba(255, 255, 255, 0.1)', border: '1px solid var(--glass-border)' }}
+                onClick={handleDownloadPDF}
+              >
+                <Download size={18} /> Export PDF
+              </button>
             </div>
-          )}
-          {bidderStatus === 'success' && (
-            <p style={{ color: 'var(--success)', marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <CheckCircle size={18} /> Bidder Data Extracted
-            </p>
-          )}
-        </div>
+            <div style={{ overflowX: 'auto' }}>
+              <table className="results-table">
+                <thead>
+                  <tr>
+                    <th>Criterion</th>
+                    <th>Bidder Value</th>
+                    <th>Decision</th>
+                    <th>Explanation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {evaluationResults.map((result, index) => (
+                    <tr key={index}>
+                      <td>
+                        <div style={{ fontWeight: 500 }}>{result.criterionName}</div>
+                      </td>
+                      <td>
+                        <div>{result.bidderValue || 'Not Found'}</div>
+                        <div className="reason">Source: {result.source || 'N/A'}</div>
+                      </td>
+                      <td>
+                        <span className={getBadgeClass(result.decision)}>
+                          {getDecisionIcon(result.decision)}
+                          <span style={{ marginLeft: '4px' }}>{result.decision}</span>
+                        </span>
+                      </td>
+                      <td>
+                        <div className="reason" style={{ marginTop: 0 }}>{result.reason}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
 
-      <button 
-        className="btn evaluate-btn" 
-        onClick={handleEvaluate}
-        disabled={evaluating || tenderStatus !== 'success' || bidderStatus !== 'success'}
-      >
-        {evaluating ? (
-          <><Loader className="spinner" /> Evaluating...</>
-        ) : (
-          <><Play /> Run Evaluation</>
-        )}
-      </button>
-
-      {/* Results Section */}
-      {evaluationResults && evaluationResults.length > 0 && (
-        <div className="card">
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h2 style={{ marginBottom: 0 }}>Evaluation Results</h2>
-            <button 
-              className="btn" 
-              style={{ width: 'auto', marginTop: 0, background: 'rgba(255, 255, 255, 0.1)', border: '1px solid var(--glass-border)' }}
-              onClick={handleDownloadPDF}
-            >
-              <Download size={18} /> Export PDF
-            </button>
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <Bot size={24} />
+            <span>TenderAI</span>
           </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table className="results-table">
-              <thead>
-                <tr>
-                  <th>Criterion</th>
-                  <th>Bidder Value</th>
-                  <th>Decision</th>
-                  <th>Explanation</th>
-                </tr>
-              </thead>
-              <tbody>
-                {evaluationResults.map((result, index) => (
-                  <tr key={index}>
-                    <td>
-                      <div style={{ fontWeight: 500 }}>{result.criterionName}</div>
-                    </td>
-                    <td>
-                      <div>{result.bidderValue || 'Not Found'}</div>
-                      <div className="reason">Source: {result.source || 'N/A'}</div>
-                    </td>
-                    <td>
-                      <span className={getBadgeClass(result.decision)}>
-                        {getDecisionIcon(result.decision)}
-                        <span style={{ marginLeft: '4px' }}>{result.decision}</span>
-                      </span>
-                    </td>
-                    <td>
-                      <div className="reason" style={{ marginTop: 0 }}>{result.reason}</div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <p className="footer-text">© {new Date().getFullYear()} TenderAI Platform. Built for automation.</p>
+          <div className="footer-socials">
+            <a href="#"><Github size={20} /></a>
+            <a href="#"><Twitter size={20} /></a>
+            <a href="#"><Linkedin size={20} /></a>
           </div>
         </div>
-      )}
-    </div>
+      </footer>
+    </>
   );
 }
 
