@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader, Play, Download } from 'lucide-react';
+import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader, Play, Download, Bot } from 'lucide-react';
 import './index.css';
 
 const API_URL = 'http://localhost:3001';
@@ -134,8 +134,13 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Background Orbs */}
+      <div className="orb orb-1"></div>
+      <div className="orb orb-2"></div>
+      <div className="orb orb-3"></div>
+
       <header className="header">
-        <h1>TenderAI</h1>
+        <h1><Bot size={54} className="title-icon" /> TenderAI</h1>
         <p>Automated Tender Eligibility Evaluation</p>
       </header>
 
@@ -151,7 +156,7 @@ function App() {
         {/* Tender Upload */}
         <div className="card">
           <h2><FileText className="text-primary" /> Tender Document</h2>
-          <div className="file-input-wrapper">
+          <div className={`file-input-wrapper ${tenderStatus === 'loading' ? 'scanning-wrapper' : ''}`}>
             <input type="file" accept=".pdf" onChange={handleTenderUpload} />
             <Upload size={32} className="icon" />
             <p>{tenderFile ? tenderFile.name : 'Click or drag PDF to upload'}</p>
@@ -171,7 +176,7 @@ function App() {
         {/* Bidder Upload */}
         <div className="card">
           <h2><FileText className="text-primary" /> Bidder Documents</h2>
-          <div className="file-input-wrapper">
+          <div className={`file-input-wrapper ${bidderStatus === 'loading' ? 'scanning-wrapper' : ''}`}>
             <input type="file" accept=".pdf,image/*" multiple onChange={handleBidderUpload} />
             <Upload size={32} className="icon" />
             <p>{bidderFiles.length > 0 ? `${bidderFiles.length} files selected` : 'Click or drag documents to upload'}</p>
