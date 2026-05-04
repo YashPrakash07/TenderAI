@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader, Play, Download, Bot, Github, Twitter, Linkedin } from 'lucide-react';
+import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader, Play, Download, Bot, Globe, Mail, MessageCircle } from 'lucide-react';
 import './index.css';
 
 const API_URL = 'http://localhost:3001';
@@ -278,9 +278,9 @@ function App() {
           </div>
           <p className="footer-text">© {new Date().getFullYear()} TenderAI Platform. Built for automation.</p>
           <div className="footer-socials">
-            <a href="#"><Github size={20} /></a>
-            <a href="#"><Twitter size={20} /></a>
-            <a href="#"><Linkedin size={20} /></a>
+            <a href="#"><Globe size={20} /></a>
+            <a href="#"><Mail size={20} /></a>
+            <a href="#"><MessageCircle size={20} /></a>
           </div>
         </div>
       </footer>
