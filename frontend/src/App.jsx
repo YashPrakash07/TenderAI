@@ -120,6 +120,12 @@ function App() {
     });
   };
 
+  const handleResultChange = (index, field, value) => {
+    const updatedResults = [...evaluationResults];
+    updatedResults[index] = { ...updatedResults[index], [field]: value };
+    setEvaluationResults(updatedResults);
+  };
+
   const getDecisionIcon = (decision) => {
     if (decision === 'Eligible') return <CheckCircle size={18} className="text-success" />;
     if (decision === 'Not Eligible') return <XCircle size={18} className="text-danger" />;
@@ -235,13 +241,25 @@ function App() {
                       <div className="reason">Source: {result.source || 'N/A'}</div>
                     </td>
                     <td>
-                      <span className={getBadgeClass(result.decision)}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', padding: '4px 8px' }}>
                         {getDecisionIcon(result.decision)}
-                        <span style={{ marginLeft: '4px' }}>{result.decision}</span>
-                      </span>
+                        <select 
+                          style={{ background: 'transparent', color: 'var(--text)', border: 'none', outline: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}
+                          value={result.decision}
+                          onChange={(e) => handleResultChange(index, 'decision', e.target.value)}
+                        >
+                          <option value="Eligible" style={{ color: 'black' }}>Eligible</option>
+                          <option value="Not Eligible" style={{ color: 'black' }}>Not Eligible</option>
+                          <option value="Needs Review" style={{ color: 'black' }}>Needs Review</option>
+                        </select>
+                      </div>
                     </td>
                     <td>
-                      <div className="reason" style={{ marginTop: 0 }}>{result.reason}</div>
+                      <textarea 
+                        style={{ width: '100%', minHeight: '60px', background: 'rgba(0,0,0,0.2)', color: 'var(--text)', border: '1px solid var(--glass-border)', borderRadius: '4px', padding: '8px', fontSize: '0.875rem', resize: 'vertical' }}
+                        value={result.reason}
+                        onChange={(e) => handleResultChange(index, 'reason', e.target.value)}
+                      />
                     </td>
                   </tr>
                 ))}
