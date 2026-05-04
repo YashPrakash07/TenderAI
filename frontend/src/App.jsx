@@ -134,6 +134,11 @@ function App() {
 
   return (
     <>
+      {/* Background Orbs */}
+      <div className="orb orb-1"></div>
+      <div className="orb orb-2"></div>
+      <div className="orb orb-3"></div>
+
       <nav className="navbar">
         <div className="nav-brand">
           <Bot size={28} className="nav-icon" />
@@ -147,11 +152,6 @@ function App() {
       </nav>
 
       <div className="app-container">
-        {/* Background Orbs */}
-        <div className="orb orb-1"></div>
-        <div className="orb orb-2"></div>
-        <div className="orb orb-3"></div>
-
         <header className="header">
           <h1>Tender Eligibility Evaluator</h1>
           <p>Automate your compliance checks with advanced AI</p>
