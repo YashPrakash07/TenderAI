@@ -173,10 +173,13 @@ Always return valid JSON. If any field is uncertain, mark it as "uncertain" inst
         
         let evaluationResults = [];
         try {
-            const resultJson = JSON.parse(response.choices[0].message.content);
+            let content = response.choices[0].message.content;
+            content = content.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const resultJson = JSON.parse(content);
             evaluationResults = resultJson.results || [];
         } catch(e) {
             console.error("JSON parse error:", e);
+            return res.status(500).json({ error: 'AI returned invalid formatting. Please run evaluation again.' });
         }
 
         res.json({ results: evaluationResults });

@@ -25,6 +25,7 @@ function App() {
     formData.append('tenderDocument', file);
     
     setTenderStatus('loading');
+    setEvaluationResults(null); // Clear previous results
     try {
       await axios.post(`${API_URL}/upload-tender`, formData);
       setTenderStatus('success');
@@ -44,6 +45,7 @@ function App() {
     files.forEach(file => formData.append('bidderDocuments', file));
     
     setBidderStatus('loading');
+    setEvaluationResults(null); // Clear previous results
     try {
       await axios.post(`${API_URL}/upload-bidder`, formData);
       setBidderStatus('success');
@@ -57,6 +59,7 @@ function App() {
   const handleEvaluate = async () => {
     setEvaluating(true);
     setErrorMsg('');
+    setEvaluationResults(null); // Clear before starting
     try {
       const response = await axios.post(`${API_URL}/evaluate`);
       setEvaluationResults(response.data.results);
