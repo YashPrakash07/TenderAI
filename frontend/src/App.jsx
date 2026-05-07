@@ -234,6 +234,7 @@ function App() {
 
         {/* Results Section */}
         {evaluationResults && evaluationResults.length > 0 && (
+          <div className="card">
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ marginBottom: 0 }}>Evaluation Results</h2>
               <button 
