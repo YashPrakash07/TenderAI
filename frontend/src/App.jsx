@@ -135,6 +135,16 @@ function App() {
     return 'badge needs-review';
   };
 
+  const getOverallDecision = () => {
+    if (!evaluationResults || evaluationResults.length === 0) return null;
+    const decisions = evaluationResults.map(r => r.decision);
+    if (decisions.includes('Not Eligible')) return 'Not Eligible';
+    if (decisions.includes('Needs Review')) return 'Needs Review';
+    return 'Eligible';
+  };
+
+  const overallDecision = getOverallDecision();
+
   return (
     <>
       {/* Background Orbs */}
@@ -224,8 +234,7 @@ function App() {
 
         {/* Results Section */}
         {evaluationResults && evaluationResults.length > 0 && (
-          <div className="card">
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ marginBottom: 0 }}>Evaluation Results</h2>
               <button 
                 className="btn" 
@@ -235,6 +244,16 @@ function App() {
                 <Download size={18} /> Export PDF
               </button>
             </div>
+
+            {/* Overall Status Card */}
+            <div className={`final-decision-card ${overallDecision.toLowerCase().replace(' ', '-')}`}>
+              <div className="final-decision-label">OVERALL STATUS</div>
+              <div className="final-decision-value">
+                {getDecisionIcon(overallDecision)}
+                <span>{overallDecision}</span>
+              </div>
+            </div>
+
             <div style={{ overflowX: 'auto' }}>
               <table className="results-table">
                 <thead>

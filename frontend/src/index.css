@@ -617,3 +617,77 @@ tbody tr:nth-child(5) { animation-delay: 0.5s; }
   90% { opacity: 1; }
   100% { top: 110%; opacity: 0; }
 }
+/* Final Decision Card Styling */
+.final-decision-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  animation: slide-in-top 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes slide-in-top {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.final-decision-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.final-decision-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.final-decision-card.eligible {
+  border-left: 6px solid var(--success);
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+}
+
+.final-decision-card.eligible .final-decision-value {
+  color: var(--success);
+  text-shadow: 0 0 20px var(--success-glow);
+}
+
+.final-decision-card.not-eligible {
+  border-left: 6px solid var(--danger);
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%);
+}
+
+.final-decision-card.not-eligible .final-decision-value {
+  color: var(--danger);
+  text-shadow: 0 0 20px var(--danger-glow);
+}
+
+.final-decision-card.needs-review {
+  border-left: 6px solid var(--warning);
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
+}
+
+.final-decision-card.needs-review .final-decision-value {
+  color: var(--warning);
+  text-shadow: 0 0 20px var(--warning-glow);
+}
+
+.final-decision-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 150px; height: 100%;
+  background: radial-gradient(circle at 100% 50%, rgba(255, 255, 255, 0.03), transparent 70%);
+  pointer-events: none;
+}
