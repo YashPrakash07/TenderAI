@@ -152,7 +152,11 @@ app.post('/evaluate', async (req, res) => {
         
         const prompt = `You are an expert tender evaluator. Compare the following extracted bidder data with the tender eligibility criteria.
 For each tender criterion, determine if the bidder is Eligible, Not Eligible, or Needs Review.
-Provide an explainable reason for your decision.
+
+CRITICAL INSTRUCTIONS FOR DECISION:
+- If the bidder's data clearly meets or exceeds the required tender criterion, you MUST mark them as "Eligible". Do not use "Needs Review" if the data is sufficient.
+- If the bidder clearly fails to meet the criterion, mark as "Not Eligible".
+- ONLY use "Needs Review" if the information is completely missing, highly ambiguous, or requires human verification.
 
 Tender Criteria:
 ${JSON.stringify(tenderData, null, 2)}
@@ -167,8 +171,7 @@ Return the result STRICTLY as a JSON object with a key 'results' which is an arr
 - decision ("Eligible", "Not Eligible", or "Needs Review")
 - reason (A clear explanation of why)
 
-Always return valid JSON. If any field is uncertain, mark it as "uncertain" instead of guessing.
-`;
+Always return valid JSON.`;
         
         const response = await openai.chat.completions.create({
             model: 'llama-3.3-70b-versatile',
