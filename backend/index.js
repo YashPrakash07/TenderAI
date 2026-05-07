@@ -154,9 +154,12 @@ app.post('/evaluate', async (req, res) => {
 For each tender criterion, determine if the bidder is Eligible, Not Eligible, or Needs Review.
 
 CRITICAL INSTRUCTIONS FOR DECISION:
-- If the bidder's data clearly meets or exceeds the required tender criterion, you MUST mark them as "Eligible". Do not use "Needs Review" if the data is sufficient.
-- If the bidder clearly fails to meet the criterion, mark as "Not Eligible".
-- ONLY use "Needs Review" if the information is completely missing, highly ambiguous, or requires human verification.
+1. **Financials**: Understand numbers, abbreviations (e.g., 'Cr', 'M', 'K'), and currencies. 10 Cr > 5 Cr.
+2. **Certifications**: Use logical fuzzy matching (e.g., "ISO 9001:2015" meets "ISO 9001").
+3. **Experience**: Evaluate if the bidder's project experience aligns with the tender's requirements.
+4. If the bidder's data clearly meets or exceeds the required tender criterion, you MUST mark them as "Eligible". Do not use "Needs Review" if the data is sufficient.
+5. If the bidder clearly fails to meet the criterion, mark as "Not Eligible".
+6. ONLY use "Needs Review" if the information is completely missing, highly ambiguous, or requires human verification.
 
 Tender Criteria:
 ${JSON.stringify(tenderData, null, 2)}
@@ -168,8 +171,9 @@ Return the result STRICTLY as a JSON object with a key 'results' which is an arr
 - criterionName
 - bidderValue (What the bidder provided, if any)
 - source (Source document from bidder data)
+- analysis (A step-by-step logical comparison of the bidderValue vs the tender requirement)
 - decision ("Eligible", "Not Eligible", or "Needs Review")
-- reason (A clear explanation of why)
+- reason (A clear, concise summary of the analysis)
 
 Always return valid JSON.`;
         
