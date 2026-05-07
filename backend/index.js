@@ -157,9 +157,10 @@ CRITICAL INSTRUCTIONS FOR DECISION:
 1. **Financials**: Understand numbers, abbreviations (e.g., 'Cr', 'M', 'K'), and currencies. 10 Cr > 5 Cr.
 2. **Certifications**: Use logical fuzzy matching (e.g., "ISO 9001:2015" meets "ISO 9001").
 3. **Experience**: Evaluate if the bidder's project experience aligns with the tender's requirements.
-4. If the bidder's data clearly meets or exceeds the required tender criterion, you MUST mark them as "Eligible". Do not use "Needs Review" if the data is sufficient.
-5. If the bidder clearly fails to meet the criterion, mark as "Not Eligible".
-6. ONLY use "Needs Review" if the information is completely missing, highly ambiguous, or requires human verification.
+4. **Golden Rule**: Be decisive. If the data is present and logically satisfies the requirement, you MUST mark it as "Eligible". Do not be pedantic about exact wording if the meaning is the same.
+5. If the bidder's data clearly meets or exceeds the required tender criterion, mark as "Eligible".
+6. If the bidder clearly fails to meet the criterion, mark as "Not Eligible".
+7. ONLY use "Needs Review" if the information is completely missing or is a total contradiction.
 
 Tender Criteria:
 ${JSON.stringify(tenderData, null, 2)}
