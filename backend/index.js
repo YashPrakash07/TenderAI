@@ -150,33 +150,130 @@ app.post('/evaluate', async (req, res) => {
         if (!tenderData) return res.status(400).json({ error: 'Tender data not found. Please upload a tender first.' });
         if (!bidderData || bidderData.length === 0) return res.status(400).json({ error: 'Bidder data not found. Please upload bidder documents.' });
         
-        const prompt = `You are an expert tender evaluator. Compare the following extracted bidder data with the tender eligibility criteria.
-For each tender criterion, determine if the bidder is Eligible, Not Eligible, or Needs Review.
+        const prompt = `
+You are TenderAI, an expert AI procurement evaluation system.
 
-CRITICAL INSTRUCTIONS FOR DECISION:
-1. **Financials**: Understand numbers, abbreviations (e.g., 'Cr', 'M', 'K'), and currencies. 10 Cr > 5 Cr.
-2. **Certifications**: Use logical fuzzy matching (e.g., "ISO 9001:2015" meets "ISO 9001").
-3. **Experience**: Evaluate if the bidder's project experience aligns with the tender's requirements.
-4. **Golden Rule**: Be decisive. If the data is present and logically satisfies the requirement, you MUST mark it as "Eligible". Do not be pedantic about exact wording if the meaning is the same.
-5. If the bidder's data clearly meets or exceeds the required tender criterion, mark as "Eligible".
-6. If the bidder clearly fails to meet the criterion, mark as "Not Eligible".
-7. ONLY use "Needs Review" if the information is completely missing or is a total contradiction.
+Your task is to compare bidder information against tender eligibility criteria and generate a strict, explainable evaluation.
 
-Tender Criteria:
+========================
+TENDER CRITERIA
+========================
 ${JSON.stringify(tenderData, null, 2)}
 
-Bidder Data:
+========================
+BIDDER DATA
+========================
 ${JSON.stringify(bidderData, null, 2)}
 
-Return the result STRICTLY as a JSON object with a key 'results' which is an array of objects containing:
-- criterionName
-- bidderValue (What the bidder provided, if any)
-- source (Source document from bidder data)
-- analysis (A step-by-step logical comparison of the bidderValue vs the tender requirement)
-- decision ("Eligible", "Not Eligible", or "Needs Review")
-- reason (A clear, concise summary of the analysis)
+========================
+EVALUATION RULES
+========================
 
-Always return valid JSON.`;
+For EACH tender criterion:
+- Determine whether the bidder is:
+  1. Eligible
+  2. Not Eligible
+  3. Needs Review
+
+Be decisive and practical.
+
+========================
+DECISION LOGIC
+========================
+
+1. ELIGIBLE
+Mark "Eligible" if:
+- Bidder data clearly meets the requirement
+- Bidder exceeds the requirement
+- Logical equivalence exists
+- Minor wording differences exist but meaning is same
+
+Examples:
+- "ISO 9001:2015" satisfies "ISO 9001"
+- "6 Cr turnover" satisfies "minimum 5 Cr"
+- 4 completed projects satisfies "minimum 3 projects"
+
+2. NOT ELIGIBLE
+Mark "Not Eligible" if:
+- Bidder clearly fails requirement
+- Required certification is missing
+- Financial threshold is below requirement
+- Required experience is insufficient
+
+Examples:
+- 3 Cr turnover for minimum 5 Cr
+- Missing ISO certification
+- 1 project when minimum 3 required
+
+3. NEEDS REVIEW
+ONLY use "Needs Review" when:
+- Information is completely missing
+- OCR text is unreadable
+- Criterion is ambiguous
+- Data is contradictory
+
+Do NOT use "Needs Review" if logical evaluation is possible.
+
+========================
+SPECIAL HANDLING RULES
+========================
+
+FINANCIALS:
+- Understand units:
+  - Cr = Crore
+  - Lakh
+  - Million (M)
+  - Thousand (K)
+- Compare actual values intelligently
+- Ignore formatting differences
+
+CERTIFICATIONS:
+- Use fuzzy matching
+- Certification versions are acceptable
+- Similar naming should match logically
+
+EXPERIENCE:
+- Count completed projects
+- Compare required project count
+- Match similar project categories logically
+
+OCR NORMALIZATION:
+- Ignore OCR noise or minor extraction errors
+- Example:
+  - "n5 Cr" should be interpreted as "5 Cr"
+  - Extra symbols/spaces should be ignored
+
+========================
+OUTPUT FORMAT
+========================
+
+Return ONLY valid JSON.
+
+Format:
+{
+  "results": [
+    {
+      "criterionName": "Minimum Annual Turnover",
+      "bidderValue": "6 Cr",
+      "source": "Document name/section",
+      "analysis": "Step-by-step logical comparison...",
+      "decision": "Eligible",
+      "reason": "Bidder turnover exceeds required threshold."
+    }
+  ],
+  "overallDecision": "Eligible"
+}
+
+========================
+IMPORTANT
+========================
+
+- Never hallucinate missing data
+- Never invent certifications
+- Always provide concise explanations
+- Use practical procurement reasoning
+- Prefer "Eligible" if requirement is clearly satisfied
+`;
         
         const response = await openai.chat.completions.create({
             model: 'llama-3.3-70b-versatile',

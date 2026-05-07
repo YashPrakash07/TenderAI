@@ -62,7 +62,7 @@ function App() {
     setEvaluationResults(null); // Clear before starting
     try {
       const response = await axios.post(`${API_URL}/evaluate`);
-      setEvaluationResults(response.data.results);
+      setEvaluationResults(response.data);
     } catch (err) {
       console.error(err);
       setErrorMsg('Evaluation failed. Please make sure both tender and bidder documents are uploaded.');
@@ -86,7 +86,7 @@ function App() {
         const tableColumn = ["Criterion", "Bidder Value", "Decision", "Explanation"];
         const tableRows = [];
 
-        evaluationResults.forEach(result => {
+        overallDecisionData.forEach(result => {
           const rowData = [
             result.criterionName,
             `${result.bidderValue || 'Not Found'}\n(Source: ${result.source || 'N/A'})`,
@@ -136,13 +136,21 @@ function App() {
   };
 
   const getOverallDecision = () => {
-    if (!evaluationResults || evaluationResults.length === 0) return null;
-    const decisions = evaluationResults.map(r => r.decision);
+    if (!evaluationResults) return null;
+    
+    // Use AI generated decision if available
+    if (evaluationResults.overallDecision) return evaluationResults.overallDecision;
+    
+    const results = evaluationResults.results || [];
+    if (results.length === 0) return null;
+    
+    const decisions = results.map(r => r.decision);
     if (decisions.includes('Not Eligible')) return 'Not Eligible';
     if (decisions.includes('Needs Review')) return 'Needs Review';
     return 'Eligible';
   };
 
+  const overallDecisionData = evaluationResults?.results || [];
   const overallDecision = getOverallDecision();
 
   return (
@@ -233,7 +241,7 @@ function App() {
         </button>
 
         {/* Results Section */}
-        {evaluationResults && evaluationResults.length > 0 && (
+        {evaluationResults && overallDecisionData.length > 0 && (
           <div className="card">
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ marginBottom: 0 }}>Evaluation Results</h2>
@@ -266,7 +274,7 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {evaluationResults.map((result, index) => (
+                  {overallDecisionData.map((result, index) => (
                     <tr key={index}>
                       <td>
                         <div style={{ fontWeight: 500 }}>{result.criterionName}</div>
