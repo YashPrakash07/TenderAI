@@ -207,7 +207,7 @@ Examples:
 
 3. NEEDS REVIEW
 ONLY use "Needs Review" when:
-- Information is completely missing
+- Information required for evaluation is missing AND cannot be reasonably inferred
 - OCR text is unreadable
 - Criterion is ambiguous
 - Data is contradictory
