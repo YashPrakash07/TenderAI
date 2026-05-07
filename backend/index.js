@@ -11,6 +11,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root route to check if server is running
+app.get('/', (req, res) => {
+    res.json({ message: 'TenderAI Backend is running successfully!' });
+});
+
 const upload = multer({ dest: 'uploads/' });
 const openai = new OpenAI({ 
     apiKey: process.env.GROQ_API_KEY,

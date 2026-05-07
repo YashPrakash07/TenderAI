@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Loader, Play, Download, Bot, Globe, Mail, MessageCircle } from 'lucide-react';
 import './index.css';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 function App() {
   const [tenderFile, setTenderFile] = useState(null);
